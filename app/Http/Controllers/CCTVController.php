@@ -21,7 +21,7 @@ class CCTVController extends Controller
         }
     
         $feedEvents = FeedEvent::latest('time')->take(5)->get();
-    
+        //dd($cameras);
         return view('cctv.index', compact('categories', 'cameras', 'feedEvents', 'activeCategory'));
     }
 }

@@ -7,6 +7,8 @@
     <!-- Use CDN for Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
     <style>
         video {
             width: 100%;
@@ -55,13 +57,11 @@
                                 @foreach ($locationCameras as $camera)
                                     <div class="bg-white rounded-lg overflow-hidden shadow-md">
                                         <div class="relative">
+                                            <video id = "{{ $camera->id }}" controls>
+                                                <source src="{{ asset('videos/test1.mp4') }}?v={{ \Illuminate\Support\Str::random(10)  }}" type="video/mp4">
 
-                                        <input type="hidden" name="webrtc-url-{{$camera->id}}" id="webrtc-url-{{$camera->id}}"
-                                            value="http://localhost:8083/stream/aaa/channel/0/webrtc">
-                                        <video id="webrtc-video-{{$camera->id}}" autoplay muted playsinline controls
-                                            style="max-width: 100%; max-height: 100%;">
-                                        </video>
-                                        
+                                                Your browser does not support the video tag.
+                                            </video>
                                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                                 <div class="flex items-center justify-between text-white">
                                                     <span>{{ $camera->name }}</span>
@@ -79,8 +79,12 @@
                             @foreach($cameras as $camera)
                                 <div class="bg-white rounded-lg overflow-hidden shadow-md">
                                     <div class="relative">
-                                        <video id="liveStream-{{ $camera->id }}" autoplay playsinline controls></video>
-                                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                                            <video id = "{{ $camera->id }}"  controls>
+                                               <source src="{{ asset('videos/test1.mp4') }}?v={{  \Illuminate\Support\Str::random(10)  }}" type="video/mp4">
+
+                                                Your browser does not support the video tag.
+                                            </video>                                        
+                                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                             <div class="flex items-center justify-between text-white">
                                                 <span>{{ $camera->name }}</span>
                                                 <span x-data x-init="$el.textContent = new Date().toLocaleTimeString()"></span>
@@ -154,67 +158,6 @@
             });
         });
         
-    </script>
-                        <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                function startPlay (videoEl, url) {
-                    const webrtc = new RTCPeerConnection({
-                    iceServers: [{
-                        urls: ['stun:stun.l.google.com:19302']
-                    }],
-                    sdpSemantics: 'unified-plan'
-                    })
-                    webrtc.ontrack = function (event) {
-                    console.log(event.streams.length + ' track is delivered')
-                    videoEl.srcObject = event.streams[0]
-                    videoEl.play()
-                    }
-                    webrtc.addTransceiver('video', { direction: 'sendrecv' })
-                    webrtc.onnegotiationneeded = async function handleNegotiationNeeded () {
-                    const offer = await webrtc.createOffer()
-
-                    await webrtc.setLocalDescription(offer)
-
-                    fetch(url, {
-                        method: 'POST',
-                        body: new URLSearchParams({ data: btoa(webrtc.localDescription.sdp) })
-                    })
-                        .then(response => response.text())
-                        .then(data => {
-                        try {
-                            webrtc.setRemoteDescription(
-                            new RTCSessionDescription({ type: 'answer', sdp: atob(data) })
-                            )
-                        } catch (e) {
-                            console.warn(e)
-                        }
-                        })
-                    }
-
-                    const webrtcSendChannel = webrtc.createDataChannel('rtsptowebSendChannel')
-                    webrtcSendChannel.onopen = (event) => {
-                    console.log(`${webrtcSendChannel.label} has opened`)
-                    webrtcSendChannel.send('ping')
-                    }
-                    webrtcSendChannel.onclose = (_event) => {
-                    console.log(`${webrtcSendChannel.label} has closed`)
-                    startPlay(videoEl, url)
-                    }
-                    webrtcSendChannel.onmessage = event => console.log(event.data)
-                }
-
-                @foreach($cameras as $location => $locationCameras)
-                    @foreach ($locationCameras as $camera)
-                        const videoEl{{ $camera->id }} = document.querySelector('#webrtc-video-{{ $camera->id }}');
-                        const webrtcUrl{{ $camera->id }} = document.querySelector('#webrtc-url-{{ $camera->id }}').value;
-                        startPlay(videoEl{{ $camera->id }}, webrtcUrl{{ $camera->id }});
-                    @endforeach
-                @endforeach
-
-
-                startPlay(videoEl, webrtcUrl)
-                })
-
     </script>
 </body>
 </html>
