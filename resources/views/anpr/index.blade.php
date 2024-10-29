@@ -1,3 +1,7 @@
+<head>
+    <!-- Example of Bootstrap CSS import -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+</head>
 <div class="container">
     <h1>ANPR Detection Events</h1>
     <table class="table table-striped">
