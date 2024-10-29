@@ -14,12 +14,16 @@ class CCTVController extends Controller
         $categories = ['All', 'Monitor', 'Front Gate', 'Exit Gate'];
     
         // Fetch cameras grouped by location when 'All' is selected
+        // Always group cameras by location for consistent data structure
         if ($activeCategory === 'All') {
-            $cameras = Camera::all()->groupBy('location'); // Group by 'location'
+            $cameras = Camera::all()->groupBy('location');
         } else {
-            $cameras = Camera::where('location', $activeCategory)->get();
+            // Group the filtered cameras by location as well
+            $cameras = Camera::where('location', $activeCategory)
+                           ->get()
+                           ->groupBy('location');
         }
-    
+        
         $feedEvents = FeedEvent::latest('time')->take(5)->get();
         //dd($cameras);
         return view('cctv.index', compact('categories', 'cameras', 'feedEvents', 'activeCategory'));

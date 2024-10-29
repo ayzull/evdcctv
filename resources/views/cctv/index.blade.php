@@ -50,9 +50,11 @@
                     <!-- Check if 'All' is the active category -->
                     @if ($activeCategory === 'All')
                         @foreach ($cameras as $location => $locationCameras)
+
                             <h3 class="text-xl font-semibold mb-2">{{ $location }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 @foreach ($locationCameras as $camera)
+ 
                                     <div class="bg-white rounded-lg overflow-hidden shadow-md">
                                         <div class="relative">
 
@@ -74,12 +76,18 @@
                             </div>
                         @endforeach
                     @else
+                    
                         <!-- Default behavior for other categories -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach($cameras as $camera)
+                        @foreach ($cameras as $location => $locationCameras)
+                            @foreach ($locationCameras as $camera)  
                                 <div class="bg-white rounded-lg overflow-hidden shadow-md">
                                     <div class="relative">
-                                        <video id="liveStream-{{ $camera->id }}" autoplay playsinline controls></video>
+                                        <input type="hidden" name="webrtc-url-{{$camera->id}}" id="webrtc-url-{{$camera->id}}"
+                                            value="http://localhost:8083/stream/aaa/channel/0/webrtc">
+                                        <video id="webrtc-video-{{$camera->id}}" autoplay muted playsinline controls
+                                            style="max-width: 100%; max-height: 100%;">
+                                        </video>
                                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                                             <div class="flex items-center justify-between text-white">
                                                 <span>{{ $camera->name }}</span>
@@ -89,6 +97,7 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @endforeach
                         </div>
                     @endif
                 </div>
@@ -155,7 +164,7 @@
         });
         
     </script>
-                        <script>
+    <script>
                         document.addEventListener('DOMContentLoaded', function () {
                 function startPlay (videoEl, url) {
                     const webrtc = new RTCPeerConnection({
