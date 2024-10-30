@@ -26,9 +26,11 @@
 
                         <div class="bg-white rounded-lg overflow-hidden shadow-md">
                             <div class="relative">
-
+                            <!-- debugging by checking output :
+                              <div>Camera ID: {{ $camera }}</div>
+                            -->
                                 <input type="hidden" name="webrtc-url-{{$camera->id}}" id="webrtc-url-{{$camera->id}}"
-                                    value="http://localhost:8083/stream/abc123/channel/0/webrtc">
+                                    value="http://localhost:8083/stream/{{$camera->id}}/channel/0/webrtc">
                                 <video id="webrtc-video-{{$camera->id}}" autoplay muted playsinline controls
                                     style="max-width: 100%; max-height: 100%;">
                                 </video>
@@ -50,13 +52,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         @foreach ($cameras as $location => $locationCameras)
                         @foreach ($locationCameras as $camera)
-                        <!-- debugging by checking output :
+                            <!-- debugging by checking output :
                               <div>Camera ID: {{ $camera }}</div>
                             -->
                         <div class="bg-white rounded-lg overflow-hidden shadow-md">
                             <div class="relative">
                                 <input type="hidden" name="webrtc-url-{{$camera->id}}" id="webrtc-url-{{$camera->id}}"
-                                    value="http://localhost:8083/stream/abc123/channel/0/webrtc">
+                                    value="http://localhost:8083/stream/{{$camera->id}}/channel/0/webrtc">
                                 <video id="webrtc-video-{{$camera->id}}" autoplay muted playsinline controls
                                     style="max-width: 100%; max-height: 100%;">
                                 </video>
@@ -128,88 +130,67 @@
             });
         });
     </script>
+        </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function startPlay(videoEl, url) {
-                const webrtc = new RTCPeerConnection({
+                        document.addEventListener('DOMContentLoaded', function () {
+                function startPlay (videoEl, url) {
+                    const webrtc = new RTCPeerConnection({
                     iceServers: [{
                         urls: ['stun:stun.l.google.com:19302']
                     }],
                     sdpSemantics: 'unified-plan'
-                })
-                webrtc.ontrack = function(event) {
+                    })
+                    webrtc.ontrack = function (event) {
                     console.log(event.streams.length + ' track is delivered')
                     videoEl.srcObject = event.streams[0]
                     videoEl.play()
-                }
-                webrtc.addTransceiver('video', {
-                    direction: 'sendrecv'
-                })
-                webrtc.onnegotiationneeded = async function handleNegotiationNeeded() {
+                    }
+                    webrtc.addTransceiver('video', { direction: 'sendrecv' })
+                    webrtc.onnegotiationneeded = async function handleNegotiationNeeded () {
                     const offer = await webrtc.createOffer()
 
                     await webrtc.setLocalDescription(offer)
 
                     fetch(url, {
-                            method: 'POST',
-                            body: new URLSearchParams({
-                                data: btoa(webrtc.localDescription.sdp)
-                            })
-                        })
+                        method: 'POST',
+                        body: new URLSearchParams({ data: btoa(webrtc.localDescription.sdp) })
+                    })
                         .then(response => response.text())
                         .then(data => {
-                            try {
-                                webrtc.setRemoteDescription(
-                                    new RTCSessionDescription({
-                                        type: 'answer',
-                                        sdp: atob(data)
-                                    })
-                                )
-                            } catch (e) {
-                                console.warn(e)
-                            }
+                        try {
+                            webrtc.setRemoteDescription(
+                            new RTCSessionDescription({ type: 'answer', sdp: atob(data) })
+                            )
+                        } catch (e) {
+                            console.warn(e)
+                        }
                         })
-                }
+                    }
 
-                const webrtcSendChannel = webrtc.createDataChannel('rtsptowebSendChannel')
-                webrtcSendChannel.onopen = (event) => {
+                    const webrtcSendChannel = webrtc.createDataChannel('rtsptowebSendChannel')
+                    webrtcSendChannel.onopen = (event) => {
                     console.log(`${webrtcSendChannel.label} has opened`)
                     webrtcSendChannel.send('ping')
-                }
-                webrtcSendChannel.onclose = (_event) => {
+                    }
+                    webrtcSendChannel.onclose = (_event) => {
                     console.log(`${webrtcSendChannel.label} has closed`)
                     startPlay(videoEl, url)
+                    }
+                    webrtcSendChannel.onmessage = event => console.log(event.data)
                 }
-                webrtcSendChannel.onmessage = event => console.log(event.data)
-            }
 
-            @foreach($cameras as $location => $locationCameras)
-            @foreach($locationCameras as $camera)
-            const videoEl {
-                {
-                    $camera - > id
-                }
-            } = document.querySelector('#webrtc-video-{{ $camera->id }}');
-            const webrtcUrl {
-                {
-                    $camera - > id
-                }
-            } = document.querySelector('#webrtc-url-{{ $camera->id }}').value;
-            startPlay(videoEl {
-                {
-                    $camera - > id
-                }
-            }, webrtcUrl {
-                {
-                    $camera - > id
-                }
-            });
-            @endforeach
-            @endforeach
+                @foreach($cameras as $location => $locationCameras)
+                    @foreach ($locationCameras as $camera)
+                        const videoEl{{ $camera->id }} = document.querySelector('#webrtc-video-{{ $camera->id }}');
+                        const webrtcUrl{{ $camera->id }} = document.querySelector('#webrtc-url-{{ $camera->id }}').value;
+                        startPlay(videoEl{{ $camera->id }}, webrtcUrl{{ $camera->id }});
+                    @endforeach
+                @endforeach
 
 
-            startPlay(videoEl, webrtcUrl)
-        })
+                startPlay(videoEl, webrtcUrl)
+                })
+
     </script>
 </body>
 

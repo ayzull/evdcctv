@@ -90,18 +90,21 @@ class CCTVController extends Controller
         // Define the API URL and stream ID
         $streamId = $camera->id; // Assuming the camera ID is the stream ID
         $urlToSend = $validated['rtsp'];
+       // dd($urlToSend);
         $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$streamId}/add";
+        //dd($apiUrl);
+
 
         // Prepare the API request data
         $apiData = [
             "name" => $validated['name'],
-            "channels" => [
-                "1" => [
+            "channels" => (object) [
+                "0" => [
                     "name" => "ch1", // Set a specific name for the channel
                     "url" => $urlToSend,
                     "on_demand" => true,
                     "debug" => false,
-                    "status" => 0
+
                 ], // Use string key for the channel
 
             ],
@@ -109,7 +112,7 @@ class CCTVController extends Controller
 
         // Log the API data to check its structure
         Log::info('API Request Data', ['apiData' => $apiData]);
-
+        //dd($apiData);
         // Make the API call
         $apiResponse = $this->callApi($apiUrl, $apiData);
 
