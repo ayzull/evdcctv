@@ -5,4 +5,11 @@
     <!-- Use CDN for Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        video {
+            width: 100%;
+            height: 48vh;
+            background-color: black;
+        }
+    </style>
 </head>
