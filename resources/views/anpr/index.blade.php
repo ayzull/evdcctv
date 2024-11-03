@@ -1,50 +1,43 @@
-<head>
-    <!-- Example of Bootstrap CSS import -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-</head>
+{{-- resources/views/anpr/index.blade.php --}}
 <div class="container">
-    <h1>ANPR Detection Events</h1>
-    <table class="table table-striped">
-        <thead>
+    <table class="table-auto w-full bg-white border border-gray-200">
+        <thead class="bg-gray-100">
             <tr>
-                <th>ID</th>
-                <th>License Plate</th>
-                <th>Event Time</th>
-                <th>XML Path</th>
-                <th>License Plate Image</th>
-                <th>Detection Image</th>
+                <th class="px-4 py-2 border">ID</th>
+                <th class="px-4 py-2 border">License Plate</th>
+                <th class="px-4 py-2 border">Event Time</th>
+                <th class="px-4 py-2 border">XML Path</th>
+                <th class="px-4 py-2 border">License Plate Image</th>
+                <th class="px-4 py-2 border">Detection Image</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($events as $event)
-            <tr>
-                <td>{{ $event->id }}</td>
-                <td>{{ $event->license_plate }}</td>
-                <td>{{ $event->event_time }}</td>
-                <td>
-                    <a href="{{ asset('storage/tcp-data/xml/' . $event->xml_path) }}" target="_blank">
-                        {{ $event->xml_path }}
-                    </a>
-                </td>
-                <td>
-                    <img src="{{ asset('storage/tcp-data/images/' . $event->license_plate_image_path) }}"
-                        alt="License Plate" width="100">
-                </td>
-                <td>
-                    <img src="{{ asset('storage/tcp-data/images/' . $event->detection_image_path) }}"
-                        alt="Detection" width="100">
-                </td>
-            </tr>
+                <tr>
+                    <td class="border px-4 py-2">{{ $event->id }}</td>
+                    <td class="border px-4 py-2">{{ $event->license_plate }}</td>
+                    <td class="border px-4 py-2">{{ $event->event_time }}</td>
+                    <td class="border px-4 py-2">
+                        <a href="{{ asset('storage/tcp-data/xml/' . $event->xml_path) }}" target="_blank"
+                            class="text-blue-600">{{ $event->xml_path }}</a>
+                    </td>
+                    <td class="border px-4 py-2">
+                        <img src="{{ asset('storage/tcp-data/images/' . $event->license_plate_image_path) }}"
+                            alt="License Plate" width="100">
+                    </td>
+                    <td class="border px-4 py-2">
+                        <img src="{{ asset('storage/tcp-data/images/' . $event->detection_image_path) }}"
+                            alt="Detection" width="100">
+                    </td>
+                </tr>
             @empty
-            <tr>
-                <td colspan="6" class="text-center">No events found</td>
-            </tr>
+                <tr>
+                    <td colspan="6" class="border text-center px-4 py-2">No events found</td>
+                </tr>
             @endforelse
         </tbody>
     </table>
-
-    <!-- Pagination Links -->
-    <div class="d-flex justify-content-center">
+    <div class="mt-4">
         {{ $events->links() }}
     </div>
 </div>
