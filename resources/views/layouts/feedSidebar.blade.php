@@ -8,7 +8,7 @@
         @foreach ($feedEvents as $event)
             <div class="p-4 flex items-center space-x-4">
                 <img src="{{ asset('storage/tcp-data/images/' . $event->license_plate_image_path) }}"
-                    class="w-20 h-12 object-cover rounded">
+                    class="w-20 h-12 object-contain rounded">
                 <div>
                     <h4 class="font-medium">{{ $event->license_plate }}</h4>
                     <p class="text-sm text-gray-500">
