@@ -161,7 +161,7 @@ class CCTVController extends Controller
     {
         $camera = Camera::findOrFail($cameraId);
         #TODO ADD camera_id in ANPR EVENT TABLE DATABASE 
-        $events = AnprEvent::orderBy('event_time', 'desc')->paginate(2);
+        $events = AnprEvent::orderBy('event_time', 'desc')->paginate(10);
         return view('cctv.show', compact('camera', 'events'));
     }
 
@@ -185,6 +185,8 @@ class CCTVController extends Controller
             'rtsp' => 'required|string',
         ]);
 
+        $newRTSP = $validated['rtsp'];
+
         $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/edit";
 
         $apiData = [
@@ -192,7 +194,7 @@ class CCTVController extends Controller
             "channels" => (object) [
                 "0" => [
                     "name" => $camera->name, // Set a specific name for the channel
-                    "url" => $camera->rtsp,
+                    "url" => $newRTSP,
                     "on_demand" => true,
                     "debug" => false,
                 ], // Use string key for the channel
