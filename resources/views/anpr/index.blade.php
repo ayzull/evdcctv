@@ -1,4 +1,5 @@
 {{-- resources/views/anpr/index.blade.php --}}
+@include('layouts.head')
 <div class="container">
     <table class="table-auto w-full bg-white border border-gray-200">
         <thead class="bg-gray-100">

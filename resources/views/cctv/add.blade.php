@@ -5,27 +5,16 @@
 </button>
 
 <!-- Modal -->
-<div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-lg w-full relative">
-        <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+<div id="cameraModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4 sm:p-8">
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md sm:max-w-lg md:max-w-xl relative">
+        <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">
             &times;
         </button>
 
-        <h2 class="text-2xl font-bold mb-6 text-center">Add New Camera</h2>
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center">Add New Camera</h2>
         <!-- Camera Form -->
         <form action="{{ route('cctv.add') }}" method="POST" class="space-y-4">
-            {{-- @csrf
-            <input type=" text" name="ip" placeholder="IP Address" required class="w-full p-3 border rounded">
-            <input type="text" name="brand" placeholder="Brand" required class="w-full p-3 border rounded">
-            <input type="text" name="model" placeholder="Model" required class="w-full p-3 border rounded">
-            <input type="text" name="name" placeholder="Name" required class="w-full p-3 border rounded">
-            <input type="text" name="location" placeholder="Location" required class="w-full p-3 border rounded">
-            <input type="text" name="username" placeholder="Username" required class="w-full p-3 border rounded">
-            <input type="password" name="password" placeholder="Password" required class="w-full p-3 border rounded">
-            <input type="text" name="rtsp" placeholder="RTSP URL" required class="w-full p-3 border rounded">
-            <button type="submit" class="w-full bg-gray-700 text-white p-3 rounded hover:bg-gray-600 transition">
-                Add Camera
-            </button> --}}
             @include('components.cctv.form')
         </form>
     </div>

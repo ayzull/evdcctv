@@ -21,7 +21,7 @@ class RunTcpServer extends Command
 
     public function handle()
     {
-        $host = '192.168.1.50';
+        $host = '0.0.0.0';
         $port = 5000;
 
         set_time_limit(0);
@@ -182,10 +182,6 @@ class RunTcpServer extends Command
             ]);
 
             $this->info("ANPR event saved: Plate - $plateNumber");
-            // $this->info("Time - $eventTime");
-            // $this->info("Time - $xmlFilename");
-            // $this->info("Time - $licensePlatePicture");
-            // $this->info("Time - $detectionPicture");
         } catch (\Exception $e) {
             $this->error("Error processing XML: " . $e->getMessage());
         }

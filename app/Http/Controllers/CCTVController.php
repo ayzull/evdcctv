@@ -13,7 +13,6 @@ class CCTVController extends Controller
     public function index(Request $request)
     {
         $activeCategory = $request->query('category', 'All');
-        // $categories = ['All', 'Seremban', 'Kuala Lumpur'];
         $categories = Camera::distinct('location')->pluck('location')->toArray();
         array_unshift($categories, 'All');
         sort($categories);
@@ -43,20 +42,18 @@ class CCTVController extends Controller
             return [
                 'id' => $camera->id,
                 'name' => $camera->name,
-                'rtsp_url' => $camera->rtsp,  // Assuming RTSP URL is stored here
+                'rtsp_url' => $camera->rtsp,
             ];
         });
 
         return response()->json($cameraStreams);
     }
 
-
-
     public function create()
     {
-
         return view('components.camera.add');
     }
+
     public function add(Request $request)
     {
         // Validate the input
@@ -92,14 +89,14 @@ class CCTVController extends Controller
                     "on_demand" => true,
                     "debug" => false,
 
-                ], // Use string key for the channel
+                ], //
 
             ],
         ];
 
         // Log the API data to check its structure
         Log::info('API Request Data', ['apiData' => $apiData]);
-        //dd($apiData);
+
         // Make the API call
         $apiResponse = $this->callApi($apiUrl, $apiData, 'POST');
 
