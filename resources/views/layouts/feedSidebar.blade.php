@@ -3,6 +3,7 @@
     style="margin-top: 73px;">
     <div class="p-4 border-b">
         <h3 class="text-lg font-semibold">Feed</h3>
+        <a href="{{ route('anpr.index') }}">View ANPR Events</a>
     </div>
     <div class="divide-y overflow-y-auto" style="height: calc(100vh - 121px);">
         @foreach ($feedEvents as $event)
