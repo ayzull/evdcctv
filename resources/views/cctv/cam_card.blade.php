@@ -13,12 +13,13 @@
             </div>
             <input type="hidden" name="webrtc-url-{{ $camera->id }}" id="webrtc-url-{{ $camera->id }}"
                 value="http://localhost:8083/stream/{{ $camera->id }}/channel/0/webrtc">
-            <video id="x-video-{{ $camera->id }}" autoplay muted playsinline controls
+            <video id="webrtc-video-{{ $camera->id }}" autoplay muted playsinline controls
                 style="max-width: 100%; max-height: 100%;">
             </video>
         </div>
     </div>
 @endforeach
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -1,6 +1,6 @@
-<!-- routes\web.php -->
-<?php
 
+<?php
+// routes\web.php
 use App\Http\Controllers\AnprEventController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CCTVController;
