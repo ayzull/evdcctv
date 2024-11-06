@@ -1,3 +1,4 @@
+<!-- routes\web.php -->
 <?php
 
 use App\Http\Controllers\AnprEventController;

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+// app\Models\AnprEvent.php
 use Illuminate\Database\Eloquent\Model;
 
 class AnprEvent extends Model

@@ -1,3 +1,4 @@
+{{-- resources\views\cctv\edit.blade.php --}}
 @include('layouts.head')
 <div class="bg-white p-8 m-auto rounded-lg shadow-md max-w-lg w-full relative">
     <a href="{{ route('cctv.show', $camera) }}" class="absolute top-4 left-4">

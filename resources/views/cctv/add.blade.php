@@ -1,3 +1,4 @@
+{{-- resources\views\cctv\add.blade.php --}}
 <!-- Floating Add Camera Button -->
 <button id="openModalBtn"
     class="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-full shadow-lg focus:outline-none transition z-50">

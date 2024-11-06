@@ -1,3 +1,4 @@
+{{-- resources\views\cctv\index.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 @include('layouts.head')

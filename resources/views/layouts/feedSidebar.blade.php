@@ -1,3 +1,4 @@
+{{-- resources\views\layouts\feedSidebar.blade.php --}}
 <div id="feedSidebar"
     class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out"
     style="margin-top: 73px;">

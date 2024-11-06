@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+// app\Models\camera.php
 use Illuminate\Database\Eloquent\Model;
 
 class Camera extends Model

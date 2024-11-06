@@ -1,3 +1,4 @@
+{{-- resources\views\cctv\cam_card.blade.php --}}
 @foreach ($locationCameras as $camera)
     <div class="bg-white rounded-lg overflow-hidden shadow-md border border-gray-300">
         <div class="relative">

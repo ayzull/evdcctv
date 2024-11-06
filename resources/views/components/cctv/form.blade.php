@@ -1,3 +1,4 @@
+{{-- resources\views\components\cctv\form.blade.php --}}
 @csrf
 <div class="w-full mb-4">
     <label for="ip" class="block text-gray-700 font-medium">IP Address</label>
