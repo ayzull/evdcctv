@@ -14,3 +14,5 @@ class AnprEvent extends Model
         'detection_image_path'
     ];
 }
+
+

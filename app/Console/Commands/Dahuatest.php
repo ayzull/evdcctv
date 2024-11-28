@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\AnprEvent;
+use App\Models\DahuaEvent;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -62,7 +62,7 @@ class Dahuatest extends Command
             socket_set_option($clientSocket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $this->connectionTimeout, 'usec' => 0]);
             socket_set_option($clientSocket, SOL_SOCKET, SO_SNDTIMEO, ['sec' => $this->connectionTimeout, 'usec' => 0]);
 
-            $this->info("Connection Open\r\n");
+            $this->info("--Connection Open--\r\n");
             $this->processClientRequest($clientSocket);
         }
     }
@@ -89,7 +89,7 @@ class Dahuatest extends Command
             $data .= $chunk;
         }
 
-        $this->info($data);
+
 
         // Close the socket if data received is null
         if (empty($data)) {
@@ -101,7 +101,6 @@ class Dahuatest extends Command
         // Extract JSON body from the HTTP request
         $jsonStart = strpos($data, '{');
         $jsonEnd = strrpos($data, '}');
-        $this->info($jsonStart,$jsonEnd);
         if ($jsonStart === false || $jsonEnd === false) {
             $this->error("Invalid request - JSON not found");
             socket_close($clientSocket);
@@ -118,12 +117,13 @@ class Dahuatest extends Command
             return;
         }
 
-        //close the socket after data is retrieved
-        socket_close($clientSocket);
-        $this->info("Connection closed.");
-
+        
         // Process the JSON data 
         $this->processJsonData($jsonData);
+
+        //close the socket after data is retrieved
+        socket_close($clientSocket);
+        $this->info("\r\n--Connection closed--\r\n");
     }
 
 
@@ -148,18 +148,29 @@ class Dahuatest extends Command
                 // Decode the base64 content to image 
                 $imageContent = base64_decode($picture['NormalPic']['Content'] ?? '');
                 $imageName = $picture['NormalPic']['PicName'] ?? 'unknown.jpg';
+                $plateImg =  base64_decode($picture['CutoutPic']['Content'] ?? '');
+                $plateName = $picture['CutoutPic']['PicName'] ?? 'unknown.jpg';
 
-                // Extract license plate number and vehicle color
+                // Extract license plate number, confidence, vehicle color, brand, and type
                 $licensePlate = $plate['PlateNumber'] ?? 'Unknown';
+                $confidenceLevel = $plate['Confidence'] ?? 'Unknown';
                 $vehicleColor = $vehicle['VehicleColor'] ?? 'Unknown';
+                $vehicleBrand = $vehicle['VehicleSign'] ?? 'Unknown';
+                $vehicleType = $vehicle['VehicleType'] ?? 'Unknown';
 
                 // Save the image to public/storage/tcp-data/images (laravel)
                 if ($imageContent && !empty($imageName)) {
-                    $this->info($picture['NormalPic']['Content']);
                     Storage::disk('public')->put("/tcp-data/images/{$imageName}.jpg", $imageContent);
-                    $this->info("Saved image: {$imageName}");
+                    $this->info("Saved car image: {$imageName}");
                 } else {
-                    $this->error("Failed to decode or save image or save json.");
+                    $this->error("Failed to decode or save car image");
+                }
+
+                if ($plateImg && !empty($plateName)) {
+                    Storage::disk('public')->put("/tcp-data/images/{$plateName}.jpg", $plateImg);
+                    $this->info("Saved plate image: {$plateName}");
+                } else {
+                    $this->error("Failed to decode or save plate image");
                 }
 
                 // Save the JSON file to public/tcp-data/json/
@@ -176,9 +187,14 @@ class Dahuatest extends Command
 
 
             // Store data in the database
-            $this->storeToDB($licensePlate, $vehicleColor, $imageName, $jsonFilename);
+            $this->storeToDB($licensePlate, $vehicleColor, $confidenceLevel, $vehicleBrand, $vehicleType, $imageName, $jsonFilename, $plateName);
 
-            $this->info("Processed data - Plate: {$licensePlate}, Color: {$vehicleColor}");
+            $this->info("Processed data:");
+            $this->info("Plate: {$licensePlate}");
+            $this->info("Vehicle Color: {$vehicleColor}");
+            $this->info("Confidence Level: {$confidenceLevel}");
+            $this->info("Vehicle Brand: {$vehicleBrand}");
+            $this->info("Vehicle Type: {$vehicleType}"); 
 
             }
 
@@ -190,7 +206,7 @@ class Dahuatest extends Command
     }
 
     // Store the extracted data to database
-    private function storeToDB($licensePlate, $vehicleColor, $imageName, $jsonFilename)
+    private function storeToDB($licensePlate, $vehicleColor, $confidenceLevel, $vehicleBrand, $vehicleType, $imageName, $jsonFilename,  $plateName)
     {
         try {
 
@@ -198,14 +214,16 @@ class Dahuatest extends Command
             $eventTime = now();
     
             // Insert the data into the database
-            AnprEvent::create([
+            DahuaEvent::create([
                 'license_plate' => $licensePlate,
-                //'vehicle_color' => $vehicleColor,
+                'vehicle_color' => $vehicleColor,
+                'confidence' => $confidenceLevel,
+                'vehicle_brand' => $vehicleBrand,
+                'vehicle_type' =>  $vehicleType,
                 'event_time' => $eventTime,
-                'xml_path' => $jsonFilename,  // Save the JSON file path
-                //'image_path' => $imageName,
-                'license_plate_image_path'   => "test",
-                'detection_image_path'   => "test"
+                'json_path' => $jsonFilename,  // Save the JSON file path
+                'license_plate_image_path'  => "{$plateName}.jpg" ,
+                'car_image_path'  => "{$imageName}.jpg"
             ]);
 
         } catch (\Exception $e) {
