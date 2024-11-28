@@ -17,7 +17,6 @@ class RunTcpServer extends Command
 
 
     // Ensures that all necessary initializations
-    //note: seem okay to delete (does not affect process)(test more)
     public function __construct()
     {
         parent::__construct();
