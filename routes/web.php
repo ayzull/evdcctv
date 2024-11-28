@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CCTVController;
 
 Route::get('/anpr-events', [AnprEventController::class, 'index'])->name('anpr.index');
-Route::get('/analytics/fetch-data', [AnprEventController::class, 'fetchAnalyticsData']);
 
+Route::get('/analytics/fetch-data', [AnprEventController::class, 'fetchAnalyticsData']);
 
 Route::controller(CCTVController::class)
     // ->prefix('cctv')

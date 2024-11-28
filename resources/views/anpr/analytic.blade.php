@@ -1,3 +1,4 @@
+{{-- resources\views\anpr\analytic.blade.php --}}
 <div class="container mt-5">
     <div class="text-center my-4">
         <div class="row">
