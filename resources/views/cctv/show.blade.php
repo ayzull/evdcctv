@@ -17,6 +17,7 @@
 
         {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"> --}}
         <div class="grid grid-rows-1 md:grid-rows-1 gap-6 mb-8">
+            @include('anpr.analytic')
             {{-- Video Stream Section --}}
             {{-- <div class="border-2 border-blue-500 rounded-lg shadow-lg overflow-hidden"> --}}
             @include('cctv.stream', ['camera' => $camera])

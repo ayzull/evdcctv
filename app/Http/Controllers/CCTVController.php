@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 // app/Http/Controllers/CCTVController.php
 use App\Models\AnprEvent;
 use App\Models\Camera;
-use App\Models\FeedEvent;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class CCTVController extends Controller
 {
@@ -154,12 +155,43 @@ class CCTVController extends Controller
         return json_decode($response, true);
     }
 
-    public function show($cameraId) #
+    // public function show($cameraId) #
+    // {
+    //     $camera = Camera::findOrFail($cameraId);
+    //     #TODO ADD camera_id in ANPR EVENT TABLE DATABASE 
+    //     $events = AnprEvent::orderBy('event_time', 'desc')->paginate(10);
+    //     return view('cctv.show', compact('camera', 'events'));
+    // }
+
+    public function show($cameraId, Request $request) #
     {
         $camera = Camera::findOrFail($cameraId);
         #TODO ADD camera_id in ANPR EVENT TABLE DATABASE 
         $events = AnprEvent::orderBy('event_time', 'desc')->paginate(10);
-        return view('cctv.show', compact('camera', 'events'));
+        $today = Carbon::today('Asia/Kuala_Lumpur');
+
+        // Get selected date, week, or month from request, or use defaults
+        $selectedDate = $request->input('date', $today->toDateString());
+        $selectedWeek = $request->input('week', $today->format('Y-\WW'));
+        $selectedMonth = $request->input('month', $today->format('Y-m'));
+
+        // Daily total
+        $dailyTotal = AnprEvent::whereDate('event_time', $selectedDate)->count();
+
+        // Weekly total
+        $weeklyStartDate = Carbon::parse($selectedWeek . '-1')->startOfWeek();
+        $weeklyEndDate = Carbon::parse($selectedWeek . '-1')->endOfWeek();
+        $weeklyTotal = AnprEvent::whereBetween('event_time', [
+            $weeklyStartDate,
+            $weeklyEndDate
+        ])->count();
+
+        // Monthly total
+        $monthlyTotal = AnprEvent::whereMonth('event_time', Carbon::parse($selectedMonth)->month)
+            ->whereYear('event_time', Carbon::parse($selectedMonth)->year)
+            ->count();
+
+        return view('cctv.show', compact('camera', 'events', 'dailyTotal', 'weeklyTotal', 'monthlyTotal'));
     }
 
     public function edit(Camera $camera)
