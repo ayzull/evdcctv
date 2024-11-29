@@ -160,14 +160,14 @@ class Dahuatest extends Command
 
                 // Save the image to public/storage/tcp-data/images (laravel)
                 if ($imageContent && !empty($imageName)) {
-                    Storage::disk('public')->put("/tcp-data/images/{$imageName}.jpg", $imageContent);
+                    Storage::disk('public')->put("/tcp-data/images/{$imageName}", $imageContent);
                     $this->info("Saved car image: {$imageName}");
                 } else {
                     $this->error("Failed to decode or save car image");
                 }
 
                 if ($plateImg && !empty($plateName)) {
-                    Storage::disk('public')->put("/tcp-data/images/{$plateName}.jpg", $plateImg);
+                    Storage::disk('public')->put("/tcp-data/images/{$plateName}", $plateImg);
                     $this->info("Saved plate image: {$plateName}");
                 } else {
                     $this->error("Failed to decode or save plate image");
@@ -222,8 +222,8 @@ class Dahuatest extends Command
                 'vehicle_type' =>  $vehicleType,
                 'event_time' => $eventTime,
                 'json_path' => $jsonFilename,  // Save the JSON file path
-                'license_plate_image_path'  => "{$plateName}.jpg" ,
-                'car_image_path'  => "{$imageName}.jpg"
+                'license_plate_image_path'  => "{$plateName}" ,
+                'car_image_path'  => "{$imageName}"
             ]);
 
         } catch (\Exception $e) {
