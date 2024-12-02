@@ -134,9 +134,9 @@ class Dahuatest extends Command
         try {
             
             // Stop processing if it is a keep alive notice (sended by dahua)
-            $keepAlive = $jsonData['Active'] ?? '';
-            if ($keepAlive){
-                $this->info("------------- Keep Alive -------------");    
+            $notData = $jsonData['Picture'] ?? '';
+            if ($notData){
+                $this->info("-------not anpr data-------");    
             }
             else{
 
