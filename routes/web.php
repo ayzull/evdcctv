@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CCTVController;
 
 Route::get('/anpr-events', [AnprEventController::class, 'index'])->name('anpr.index');
+Route::get('/anpr-dahua-events', [AnprEventController::class, 'dahuaIndex'])->name('anpr.dahua_anpr');
 
 Route::get('/analytics/fetch-data', [AnprEventController::class, 'fetchAnalyticsData']);
 

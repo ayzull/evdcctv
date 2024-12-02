@@ -17,7 +17,11 @@
 
         {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"> --}}
         <div class="grid grid-rows-1 md:grid-rows-1 gap-6 mb-8">
-            @include('anpr.analytic')
+            @if (stripos($camera->name, 'hik') !== false)
+                @include('anpr.analytic')
+            @elseif (stripos($camera->name, 'dahua') !== false)
+                @include('anpr.dahua_analytic')
+            @endif
             {{-- Video Stream Section --}}
             {{-- <div class="border-2 border-blue-500 rounded-lg shadow-lg overflow-hidden"> --}}
             @include('cctv.stream', ['camera' => $camera])
@@ -88,10 +92,16 @@
         </div>
 
         {{-- ANPR Events Section --}}
-        @if ($camera->name == 'ANPR')
-            <h3 class="text-2xl font-bold text-gray-800 mb-4">ANPR Detection Events</h3>
+        {{-- @if ($camera->name == 'ANPR') --}}
+        @if (stripos($camera->name, 'hik') !== false)
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">HIK ANPR Detection Events</h3>
             <div class="overflow-x-auto">
                 @include('anpr.index', ['events' => $events])
+            </div>
+        @elseif (stripos($camera->name, 'dahua') !== false)
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Dahua ANPR Detection Events</h3>
+            <div class="overflow-x-auto">
+                @include('anpr.dahua_anpr', ['dahua_events' => $dahua_events])
             </div>
         @endif
     </div>

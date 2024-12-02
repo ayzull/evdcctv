@@ -1,6 +1,6 @@
 {{-- resources/views/cctv/stream.blade.php --}}
 <input type="hidden" name="webrtc-url-{{ $camera->id }}" id="webrtc-url-{{ $camera->id }}"
-    value="http://localhost:8083/stream/{{ $camera->id }}/channel/0/webrtc">
+    value="http://147.185.221.24:10333/stream/{{ $camera->id }}/channel/0/webrtc">
 <div class="w-full aspect-w-16 aspect-h-9 border-2 border-blue-500 shadow-lg rounded-lg overflow-hidden mb-6">
     <video id="webrtc-video-{{ $camera->id }}" autoplay muted playsinline controls
         class="w-full h-full bg-black"></video>

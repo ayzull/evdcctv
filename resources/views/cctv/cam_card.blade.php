@@ -12,7 +12,7 @@
                 </div>
             </div>
             <input type="hidden" name="webrtc-url-{{ $camera->id }}" id="webrtc-url-{{ $camera->id }}"
-                value="http://localhost:8083/stream/{{ $camera->id }}/channel/0/webrtc">
+                value="http://147.185.221.24:10333/stream/{{ $camera->id }}/channel/0/webrtc">
             <video id="webrtc-video-{{ $camera->id }}" autoplay muted playsinline controls
                 style="max-width: 100%; max-height: 100%;">
             </video>

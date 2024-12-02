@@ -6,20 +6,28 @@
             <tr>
                 <th class="px-4 py-2 border">ID</th>
                 <th class="px-4 py-2 border">License Plate</th>
+                <th class="px-4 py-2 border">Confidence Level</th>
+                <th class="px-4 py-2 border">Brand</th>
+                <th class="px-4 py-2 border">Type</th>
+                <th class="px-4 py-2 border">Color</th>
                 <th class="px-4 py-2 border">Event Time</th>
-                <th class="px-4 py-2 border">XML Path</th>
+                <th class="px-4 py-2 border">JSON Path</th>
                 <th class="px-4 py-2 border">License Plate Image</th>
-                <th class="px-4 py-2 border">Detection Image</th>
+                <th class="px-4 py-2 border">Vehicle Image</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($events as $event)
+            @forelse ($dahua_events as $event)
                 <tr>
                     <td class="border px-4 py-2">{{ $event->id }}</td>
                     <td class="border px-4 py-2">{{ $event->license_plate }}</td>
+                    <td class="border px-4 py-2">{{ $event->confidence }}</td>
+                    <td class="border px-4 py-2">{{ $event->vehicle_brand }}</td>
+                    <td class="border px-4 py-2">{{ $event->vehicle_type }}</td>
+                    <td class="border px-4 py-2">{{ $event->vehicle_color }}</td>
                     <td class="border px-4 py-2">{{ $event->event_time }}</td>
                     <td class="border px-4 py-2">
-                        <a href="{{ asset('storage/tcp-data/xml/' . $event->xml_path) }}" target="_blank"
+                        <a href="{{ asset('storage/tcp-data/json/' . $event->json_path) }}" target="_blank"
                             class="text-blue-600">View</a>
                     </td>
                     <td class="border px-4 py-2">
@@ -27,8 +35,8 @@
                             alt="License Plate" width="100">
                     </td>
                     <td class="border px-4 py-2">
-                        <img src="{{ asset('storage/tcp-data/images/' . $event->detection_image_path) }}"
-                            alt="Detection" width="100">
+                        <img src="{{ asset('storage/tcp-data/images/' . $event->car_image_path) }}" alt="Detection"
+                            width="100">
                     </td>
                 </tr>
             @empty
@@ -39,6 +47,6 @@
         </tbody>
     </table>
     <div class="mt-4">
-        {{ $events->links() }}
+        {{ $dahua_events->links() }}
     </div>
 </div>

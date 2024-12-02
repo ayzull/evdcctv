@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 // app/Http/Controllers/CCTVController.php
 use App\Models\AnprEvent;
 use App\Models\Camera;
-
+use App\Models\DahuaEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
@@ -76,7 +76,8 @@ class CCTVController extends Controller
         $streamId = $camera->id; // Assuming the camera ID is the stream ID
         $urlToSend = $validated['rtsp'];
         // dd($urlToSend);
-        $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$streamId}/add";
+        // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$streamId}/add";
+        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$streamId}/add";
         //dd($apiUrl);
 
 
@@ -168,6 +169,7 @@ class CCTVController extends Controller
         $camera = Camera::findOrFail($cameraId);
         #TODO ADD camera_id in ANPR EVENT TABLE DATABASE 
         $events = AnprEvent::orderBy('event_time', 'desc')->paginate(10);
+        $dahua_events = DahuaEvent::orderBy('event_time', 'desc')->paginate(10);
         $today = Carbon::today('Asia/Kuala_Lumpur');
 
         // Get selected date, week, or month from request, or use defaults
@@ -177,6 +179,7 @@ class CCTVController extends Controller
 
         // Daily total
         $dailyTotal = AnprEvent::whereDate('event_time', $selectedDate)->count();
+        $dailyTotalDahua = DahuaEvent::whereDate('event_time', $selectedDate)->count();
 
         // Weekly total
         $weeklyStartDate = Carbon::parse($selectedWeek . '-1')->startOfWeek();
@@ -185,13 +188,20 @@ class CCTVController extends Controller
             $weeklyStartDate,
             $weeklyEndDate
         ])->count();
+        $weeklyTotalDahua = DahuaEvent::whereBetween('event_time', [
+            $weeklyStartDate,
+            $weeklyEndDate
+        ])->count();
 
         // Monthly total
         $monthlyTotal = AnprEvent::whereMonth('event_time', Carbon::parse($selectedMonth)->month)
             ->whereYear('event_time', Carbon::parse($selectedMonth)->year)
             ->count();
+        $monthlyTotalDahua = DahuaEvent::whereMonth('event_time', Carbon::parse($selectedMonth)->month)
+            ->whereYear('event_time', Carbon::parse($selectedMonth)->year)
+            ->count();
 
-        return view('cctv.show', compact('camera', 'events', 'dailyTotal', 'weeklyTotal', 'monthlyTotal'));
+        return view('cctv.show', compact('camera', 'events', 'dahua_events', 'dailyTotal', 'weeklyTotal', 'monthlyTotal', 'dailyTotalDahua', 'weeklyTotalDahua', 'monthlyTotalDahua'));
     }
 
     public function edit(Camera $camera)
@@ -216,7 +226,8 @@ class CCTVController extends Controller
 
         $newRTSP = $validated['rtsp'];
 
-        $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/edit";
+        // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/edit";
+        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$camera->id}/edit";
 
         $apiData = [
             "name" => $validated['name'],
@@ -243,7 +254,8 @@ class CCTVController extends Controller
 
     public function delete(Camera $camera)
     {
-        $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/delete";
+        // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/delete";
+        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$camera->id}/delete";
         $response = $this->callApi($apiUrl, $camera, 'DELETE');
 
         if (isset($response['status']) && $response['status'] === 0) {
