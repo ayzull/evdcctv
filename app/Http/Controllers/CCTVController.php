@@ -77,7 +77,7 @@ class CCTVController extends Controller
         $urlToSend = $validated['rtsp'];
         // dd($urlToSend);
         // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$streamId}/add";
-        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$streamId}/add";
+        $apiUrl = "https://demo:demo@evortsp.ayzultestnet.xyz/stream/{$streamId}/add";
         //dd($apiUrl);
 
 
@@ -227,7 +227,7 @@ class CCTVController extends Controller
         $newRTSP = $validated['rtsp'];
 
         // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/edit";
-        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$camera->id}/edit";
+        $apiUrl = "https://demo:demo@evortsp.ayzultestnet.xyz/stream/{$camera->id}/edit";
 
         $apiData = [
             "name" => $validated['name'],
@@ -255,7 +255,7 @@ class CCTVController extends Controller
     public function delete(Camera $camera)
     {
         // $apiUrl = "http://demo:demo@127.0.0.1:8083/stream/{$camera->id}/delete";
-        $apiUrl = "http://demo:demo@147.185.221.24:10333/stream/{$camera->id}/delete";
+        $apiUrl = "https://demo:demo@evortsp.ayzultestnet.xyz/stream/{$camera->id}/delete";
         $response = $this->callApi($apiUrl, $camera, 'DELETE');
 
         if (isset($response['status']) && $response['status'] === 0) {
