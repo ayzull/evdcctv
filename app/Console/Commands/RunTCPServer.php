@@ -27,7 +27,7 @@ class RunTcpServer extends Command
     {
         $host = '0.0.0.0';
         $port = 5000;
-        
+
 
         // Removes the PHP script's execution time limit (eg. 30sec) to continously run
         set_time_limit(0);
@@ -94,7 +94,7 @@ class RunTcpServer extends Command
             //$this->info("chunk, {$chunk}")
             $data .= $chunk;
             $this->info("---------------space-------------");
-            
+
             // Check for complete headers
             if (strpos($data, "\r\n\r\n") !== false) {
                 $headerComplete = true;
@@ -106,8 +106,8 @@ class RunTcpServer extends Command
                 }
             }
         }
-        
-       
+
+
 
         if (!$boundary) {
             $this->error("Invalid request - no boundary found");
@@ -191,10 +191,16 @@ class RunTcpServer extends Command
             // Extract relevant data from XML (customize based on your XML structure)
             $plateNumber = (string) $xml->ANPR->licensePlate ?? 'Unknown';
             $eventTime = (string) now();
+            $channelName = (string) $xml->channelName ?? 'Unknown';
+            $confidenceLevel = (string) $xml->ANPR->confidenceLevel ?? 'Unknown';
+            $vehicleType = (string) $xml->ANPR->vehicleType ?? 'Unknown';
 
             // Insert the data into the database
             AnprEvent::create([
+                'channel_name' => $channelName,
                 'license_plate' => $plateNumber,
+                'confidence_level' => $confidenceLevel,
+                'vehicle_type' => $vehicleType,
                 'event_time'   => $eventTime,
                 'xml_path'   => $xmlFilename,
                 'license_plate_image_path'   => $licensePlatePicture,

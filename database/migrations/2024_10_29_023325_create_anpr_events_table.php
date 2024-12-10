@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('anpr_events', function (Blueprint $table) {
             $table->id();
+            $table->string('channel_name')->nullable();
             $table->string('license_plate')->nullable();
+            $table->string('confidence_level')->nullable();
+            $table->string('vehicle_type')->nullable();
             $table->timestamp('event_time')->nullable();
             $table->string('xml_path')->nullable();
             $table->string('license_plate_image_path')->nullable();
